@@ -75,3 +75,69 @@ class RegisterForm(forms.ModelForm):
 
 
         return super().clean()
+    
+
+class OTPForm(forms.Form):
+
+    otp = forms.CharField(max_length=4,widget=forms.TextInput(attrs={'placeholder':'Enter OTP','required':'required','class':'form-control'}))
+
+    def clean(self):
+
+        otp = super().clean().get('otp')
+
+        if len(otp) < 4 :
+      
+            self.add_error('otp','otp must be 4 digits')
+
+        return super().clean()
+    
+
+class SetPasswordForm(forms.Form):
+
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder':'Password','required':'required','class':'form-control'}))
+
+    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder':'Confirm password','required':'required','class':'form-control'}))
+
+    def clean(self):
+
+        password = super().clean().get('password')
+
+        confirm_password = super().clean().get('confirm_password')
+
+        if password != confirm_password :
+
+            self.add_error('confirm_password','password mismatch')
+
+        return super().clean()
+    
+
+class ForgotPasswordForm(forms.Form):
+
+    email = forms.CharField(widget=forms.EmailInput(attrs={'placeholder':'Enter registered email','required':'required','class':'form-control'}))
+
+ 
+    def clean(self):
+
+        domain_list = [
+            "gmail.com",
+            "yahoo.com",
+            "outlook.com",
+            "hotmail.com",
+            "icloud.com",
+            "zoho.com",
+            "mailinator.com"
+        ]
+
+        email = super().clean().get('email')
+
+        _,domain = email.split('@')
+
+        if domain not in domain_list:
+
+            self.add_error('email','invalid email domain')
+
+        if not Profile.objects.filter(email=email).exists():
+
+            self.add_error('email','unregistered email address')
+
+        return super().clean()

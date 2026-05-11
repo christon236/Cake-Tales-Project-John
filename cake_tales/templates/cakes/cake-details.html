@@ -18,9 +18,12 @@
     </div>
 
     <!-- Cake Info -->
+   
     <div class="col-md-6">
       <div class="d-flex justify-content-start align-items-center mb-2">
         <h1 class="fw-bold mb-0">{{ cake.name }}</h1>
+        {% allowed_roles request '["Admin"]' as allow %}
+        {% if allow %}
         <div class="mx-3">
           <a class="text-primary me-2 btn" href="{% url 'cake-edit' cake.uuid %}">
             <i class="fa-solid fa-pen"></i>
@@ -33,10 +36,12 @@
             <i class="fa-solid fa-trash"></i>
           </a>
         </div>
+        {% endif %}
       </div>
+
       <p class="text-muted">{{ cake.description }}</p>
 
-      <h3 class="text-primary fw-bold">₹500</h3>
+      <h3 class="text-primary fw-bold">₹{{ cake.price }}</h3>
 
       <ul class="list-group list-group-flush my-4">
         <li class="list-group-item">
@@ -71,7 +76,7 @@
 
       <div class="d-grid gap-2 mt-4">
         <button class="btn btn-primary btn-lg">Order Now</button>
-        <button class="btn btn-outline-dark">Add to Wishlist</button>
+        <a href="{% url 'add-to-wishlist' cake.uuid %}" class="btn btn-outline-dark">Add to Wishlist</a>
       </div>
     </div>
   </div>

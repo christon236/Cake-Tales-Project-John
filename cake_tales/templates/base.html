@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>Waggy - Free eCommerce Pet Shop HTML Website Template</title>
+  <title> Cake Tales Project</title>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,6 +26,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Chilanka&family=Montserrat:wght@300;400;500&display=swap"
   rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 </head>
 
 <body>
@@ -107,38 +108,28 @@
     <div class="offcanvas-body">
       <div class="order-md-last">
         <h4 class="d-flex justify-content-between align-items-center mb-3">
+          {% cart_number request as number %}
           <span class="text-primary">Your cart</span>
-          <span class="badge bg-primary rounded-circle pt-2">3</span>
+          <span class="badge bg-primary rounded-circle pt-2">{{ number }}</span>
         </h4>
         <ul class="list-group mb-3">
+          {% for cake in request.user.cart.cakes.all %}
           <li class="list-group-item d-flex justify-content-between lh-sm">
             <div>
-              <h6 class="my-0">Grey Hoodie</h6>
-              <small class="text-body-secondary">Brief description</small>
+              <h6 class="my-0">{{cake.name}}</h6>
+              <small class="text-body-secondary">{{cake.weight}}</small>
             </div>
-            <span class="text-body-secondary">$12</span>
+            <span class="text-body-secondary">₹ {{cake.price}}</span><span class="text-body-secondary"><a href="{% url 'remove-from-cart' cake.uuid %}"><i class="fa-solid fa-trash"></i></a></span>
           </li>
-          <li class="list-group-item d-flex justify-content-between lh-sm">
-            <div>
-              <h6 class="my-0">Dog Food</h6>
-              <small class="text-body-secondary">Brief description</small>
-            </div>
-            <span class="text-body-secondary">$8</span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between lh-sm">
-            <div>
-              <h6 class="my-0">Soft Toy</h6>
-              <small class="text-body-secondary">Brief description</small>
-            </div>
-            <span class="text-body-secondary">$5</span>
-          </li>
+          {% endfor %}
           <li class="list-group-item d-flex justify-content-between">
-            <span class="fw-bold">Total (USD)</span>
-            <strong>$20</strong>
+            <span class="fw-bold">Total</span>
+            <strong>₹ {{ request.user.cart.get_total }}</strong>
           </li>
         </ul>
-
-        <button class="w-100 btn btn-primary btn-lg" type="submit">Continue to checkout</button>
+        {% if number != 0 %}
+        <a class="w-100 btn btn-primary btn-lg" href="{% url 'checkout' %}">Continue to checkout</a>
+        {% endif %}
       </div>
     </div>
   </div>
@@ -171,7 +162,7 @@
         <div class="col-sm-4 col-lg-3 text-center text-sm-start">
           <div class="main-logo">
             <a href="index.html">
-              <img src="/static/images/cake-logo.webp" alt="logo" class="img-fluid ">
+              <img src="/static/images/cake-logo.WEBP" alt="logo" class="img-fluid">
             </a>
           </div>
         </div>
@@ -179,7 +170,7 @@
         <div class="col-sm-6 offset-sm-2 offset-md-0 col-lg-5 d-none d-lg-block">
           <div class="search-bar border rounded-2 px-3 border-dark-subtle">
             <form id="search-form" class="text-center d-flex align-items-center" action="" method="">
-              <input type="text" name="quary" class="form-control border-0 bg-transparent"
+              <input type="text" name="query" value="{{query}}" class="form-control border-0 bg-transparent"
                 placeholder="Search for Cakes" />
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                 <path fill="currentColor"
@@ -197,7 +188,8 @@
           </div>
           <div class="support-box text-end d-none d-xl-block">
             <span class="fs-6 secondary-font text-muted">Email</span>
-            <h5 class="mb-0">waggy@gmail.com</h5>
+            
+            <h5 class="mb-0">caketalesjohn2026@gmail.com</h5>
           </div>
 
 
@@ -221,7 +213,7 @@
               </a>
             </li>
             <li>
-              <a href="wishlist.html" class="mx-3">
+              <a href="" class="mx-3">
                 <iconify-icon icon="mdi:heart" class="fs-4"></iconify-icon>
               </a>
             </li>
@@ -230,8 +222,9 @@
               <a href="#" class="mx-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart"
                 aria-controls="offcanvasCart">
                 <iconify-icon icon="mdi:cart" class="fs-4 position-relative"></iconify-icon>
+                
                 <span class="position-absolute translate-middle badge rounded-circle bg-primary pt-2">
-                  03
+                  {{ number }}
                 </span>
               </a>
             </li>
@@ -269,48 +262,50 @@
 
             <ul class="navbar-nav menu-list list-unstyled d-flex gap-md-3 mb-0">
               <li class="nav-item">
-                <a href="index.html" class="nav-link active">Home</a>
+                <a href="{% url 'home' %}" class="nav-link active">Home</a>
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" role="button" id="pages" data-bs-toggle="dropdown"
                   aria-expanded="false">Cakes</a>
                 <ul class="dropdown-menu" aria-labelledby="pages">
-                  <li><a href="index.html" class="dropdown-item">Brithday Cakes</a></li>
+                  <li><a href="index.html" class="dropdown-item">Birthday Cakes</a></li>
                   <li><a href="index.html" class="dropdown-item">Wedding Cakes</a></li>
                   <li><a href="index.html" class="dropdown-item">Plum Cakes</a></li>
                   <li><a href="index.html" class="dropdown-item">Cup Cakes</a></li>
-              
                 </ul>
               </li>
+              {% allowed_roles request '["Admin"]' as allow %}
+              {% if allow %}
               <li class="nav-item">
                 <a href="{% url 'add-a-cake' %}" class="nav-link">Add a Cake</a>
               </li>
+              {% endif %}
               <li class="nav-item">
                 <a href="index.html" class="nav-link">Contact Us</a>
               </li>
-
             </ul>
 
             <div class="d-none d-lg-flex align-items-end">
               <ul class="d-flex justify-content-end list-unstyled m-0">
                 <li class="dropdown">
                   <a role="button" id="login" data-bs-toggle="dropdown" class="mx-3">
-                    <iconify-icon icon="healthicons:person" class="fs-4"></iconify-icon>
+                    <iconify-icon icon="healthicons:person" class="fs-4" ></iconify-icon>
                   </a>
-                   <ul class="dropdown-menu" aria-labelledby="login">
-                    {% if request.user and request.user.is_authenticated %}
-                    <li class="dropdown-item">{{ request.user.username }}</li>
-              
-                     <li><a href="{% url 'logout' %}" class="dropdown-item">logout</a></li>
-                     {% else %}
+                  
+                  <ul class="dropdown-menu" aria-labelledby="login">
+                  {% if request.user and request.user.is_authenticated %}
+                  <li class="dropdown-item">{{request.user.username}}</li>
+                  <li><a href="{% url 'logout' %}" class="dropdown-item">Logout</a></li>
+                  <li><a href="{% url 'generate-otp' %}" class="dropdown-item">Change Password</a></li>
+                  <li><a href="{% url 'orders' %}" class="dropdown-item">Orders</a></li>
+                  {% else %}
                   <li><a href="{% url 'login' %}" class="dropdown-item">Login</a></li>
-
-                    {% endif %}
-              
+                  <li><a href="{% url 'register' %}" class="dropdown-item">Register</a></li>
+                  {% endif%}
                 </ul>
                 </li>
                 <li>
-                  <a href="index.html" class="mx-3">
+                  <a href="{% url 'wishlist' %}" class="mx-3">
                     <iconify-icon icon="mdi:heart" class="fs-4"></iconify-icon>
                   </a>
                 </li>
@@ -320,7 +315,7 @@
                     aria-controls="offcanvasCart">
                     <iconify-icon icon="mdi:cart" class="fs-4 position-relative"></iconify-icon>
                     <span class="position-absolute translate-middle badge rounded-circle bg-primary pt-2">
-                      03
+                      {{ number }}
                     </span>
                   </a>
                 </li>
@@ -340,10 +335,14 @@
   </header>
 
 
-{% block section %}
+  {% block section %}
 
 
-{% endblock %}
+
+  {% endblock %}
+
+
+
 
 
 
@@ -463,7 +462,20 @@
       </div>
     </div>
   </div>
-
+{% if messages %}
+{% for message in messages %}
+   <div class="position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 1100;">
+       
+    <div id="liveToast" class="toast align-items-center text-white border-0 show " {% if message.tags == 'success' %} style="background-color: green;"{% else %}  style="background-color: red;" {% endif %} role="alert">
+        <div class="d-flex">
+          <div class="toast-body"> {{ message }}
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+{% endif %}
 
   <script src="/static/js/jquery-1.11.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
@@ -477,6 +489,15 @@
   {% block script %}
 
   {% endblock %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var toastEl = document.getElementById('liveToast');
+      if (toastEl) {
+        var toast = new bootstrap.Toast(toastEl);
+        toast.show();
+      }
+    });
+  </script>
 </body>
 
 </html>

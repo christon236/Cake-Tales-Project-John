@@ -8,5 +8,10 @@ urlpatterns = [path('login/',views.LoginView.as_view(),name='login'),
 
                path('register/',views.RegisterView.as_view(),name='register'),
 
+               path('generate-otp/',views.GenerateOTPView.as_view(),name='generate-otp'),
+
+               path('set-password/',views.SetPasswordView.as_view(),name='set-password'),
+
+               path('forgot-password/',views.ForgotPasswordView.as_view(),name='forgot-password'),
 
                ]

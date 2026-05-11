@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block section %}
+
+
+
+
+
+<section class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h3 class="card-title text-center text-primary mb-4">💖 My Wishlist</h3>
+
+          <div class="row g-4">
+            
+            <!-- Wishlist Item 1 -->
+             {% for cake in request.user.wishlist.cakes.all %}
+            <div class="col-12">
+              <div class="card shadow-sm mb-3">
+                <div class="row g-0 align-items-center">
+                  
+                  <!-- Image -->
+                  <div class="col-md-4">
+                    <img style="width: 200px;height: 250px; object-fit: fill;" src="{{cake.photo.url}}" 
+                         class="rounded-start"  alt="">
+                  </div>
+
+                  <!-- Details -->
+                  <div class="col-md-8">
+                    <div class="card-body">
+                      <h5 class="card-title">{{cake.name}}</h5>
+                      <p class="card-text text-muted small">
+                        {{cake.description}}
+                      </p>
+                      <p class="fw-bold" style="color: green;">₹ {{cake.price}}</p>
+
+                      <p class="fw-bold">Weight : {{cake.weight.name}}</p>
+
+                      <div class="d-flex gap-2">
+                        {% cake_in_cart request cake.uuid as presents %}
+                        <a  {% if presents %} data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart" {% else %} href="{% url 'add-to-cart' cake.uuid %}" {% endif %} class="btn btn-sm btn-primary">
+                      {% if presents %}View Cart{% else %}Add to Cart{% endif %}
+                       </a>
+                        <a href="{% url 'remove-from-wishlist' cake.uuid%}"class="btn btn-sm btn-outline-danger">❌ Remove</a>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div> <!-- row -->
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+{% endblock %}

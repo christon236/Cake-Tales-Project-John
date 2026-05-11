@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block section %}
+
+
+
+
+
+<section class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h3 class="card-title text-center text-primary mb-4">My Orders</h3>
+
+          <div class="row g-4">
+            
+            <!-- Wishlist Item 1 -->
+             {% for order in orders %}
+            <div class="col-12">
+              <div class="card shadow-sm mb-3">
+                <div class="row g-0 align-items-center">
+                  
+               
+             <!-- Cakes inside this order -->
+            <div class="row">
+              {% for cake in order.cakes.all %}
+              <div class="col-md-3">
+                <img src="{{ cake.photo.url }}" 
+                   style="width:100%; height:150px; object-fit:cover;">
+                <p>{{ cake.name }}</p>
+              </div>
+              {% endfor %}
+            </div>
+
+                  <!-- Details -->
+                  <div class="col-md-8">
+                    <div class="card-body">
+                      <h5 class="card-title">Order id : {{order.order_id }}</h5>
+                      <p class="card-text text-muted small">
+                        {{ order.cake.name }}
+                      </p>
+                      <p class="fw-bold" style="color: green;">Price ₹ {{order.total_price}}</p>
+
+
+                      <div class="d-flex gap-2">
+                        
+                        <a  href="{% url 'order-details' order.uuid %}" class="btn btn-sm btn-primary">
+                         View details 
+                       </a>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div> <!-- row -->
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+{% endblock %}

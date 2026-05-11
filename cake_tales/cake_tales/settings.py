@@ -83,6 +83,7 @@ WSGI_APPLICATION = 'cake_tales.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 if config('ENVIRONMENT') == 'development' :
+    
     DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -105,17 +106,6 @@ else :
 
 
 
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': config('DB_NAME'),
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASSWORD'),
-        'HOST': 'localhost', # or your server IP
-        'PORT': '3306',
-    }
-}
 
 
 # Password validation
